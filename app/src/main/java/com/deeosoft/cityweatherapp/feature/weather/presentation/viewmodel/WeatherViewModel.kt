@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.deeosoft.cityweatherapp.feature.weather.core.exception.InternetConnectionException
 import com.deeosoft.cityweatherapp.feature.weather.domain.entity.Weather
 import com.deeosoft.cityweatherapp.feature.weather.domain.entity.WeatherForecast
 import com.deeosoft.cityweatherapp.feature.weather.domain.usecase.FavoriteUseCase
@@ -43,9 +44,13 @@ class CityWeatherViewModel @Inject constructor(
 
     fun getWeather(city: String, forceServer: Boolean = false){
         _weatherState.value = UIState.Loading
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.IO) {// this guy creates a coroutine and move the thread from MAIN thread to IO thread
             searchByCityUseCase.execute(city, forceServer).catch {
-                _weatherState.postValue(UIState.Error(it.message ?: "Something went wrong"))
+                if(it is InternetConnectionException){
+                    _weatherState.postValue(UIState.Error<List<Weather>>(it.message ?: "Something went wrong", it.getOfflineData()))
+                }else {
+                    _weatherState.postValue(UIState.Error(it.message ?: "Something went wrong"))
+                }
             }.collect{
                 if(it.isNotEmpty()){
                     _weatherState.postValue(UIState.Success(it))

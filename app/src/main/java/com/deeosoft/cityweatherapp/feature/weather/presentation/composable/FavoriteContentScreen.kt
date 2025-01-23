@@ -77,6 +77,7 @@ fun FavoriteContentScreen(modifier: Modifier = Modifier, context: Context, viewM
                 EmptyWeatherData(modifier = modifier)
             }
         }
+        else -> {}
 
     }
 }

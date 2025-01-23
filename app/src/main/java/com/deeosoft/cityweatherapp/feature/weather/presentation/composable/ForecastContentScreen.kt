@@ -113,5 +113,6 @@ fun ForeCastDetail(context: Context, viewModel: CityWeatherViewModel){
                 EmptyWeatherData(modifier = Modifier)
             }
         }
+        else -> {}
     }
 }

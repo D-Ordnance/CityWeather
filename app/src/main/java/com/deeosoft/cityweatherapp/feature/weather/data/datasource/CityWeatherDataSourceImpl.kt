@@ -39,7 +39,8 @@ class CityWeatherDataSourceImpl @Inject constructor(
                 }
             }
         }else{
-            throw InternetConnectionException("No Internet Connection")
+            val errorWithData = getLocalCityWeather(city)
+            throw InternetConnectionException("No Internet Connection", errorWithData)
         }
 
     override suspend fun localSource(city: String): List<Weather?> =
@@ -136,7 +137,7 @@ class CityWeatherDataSourceImpl @Inject constructor(
                 }
             }
         }else{
-            throw InternetConnectionException("No Internet Connection")
+            throw InternetConnectionException("No Internet Connection", "")
         }
 
     private suspend fun getLocalWeatherForecast(id: Double): List<WeatherForecast?> =

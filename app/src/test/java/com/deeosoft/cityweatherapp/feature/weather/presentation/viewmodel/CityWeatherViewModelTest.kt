@@ -7,6 +7,8 @@ import com.deeosoft.cityweatherapp.feature.weather.domain.usecase.SavedCityUseCa
 import com.deeosoft.cityweatherapp.feature.weather.domain.usecase.SearchByCityUseCase
 import com.deeosoft.cityweatherapp.feature.weather.domain.usecase.WeatherForecastUseCase
 import com.deeosoft.cityweatherapp.util.MainDispatcherRule
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.TestCoroutineScheduler
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -19,7 +21,7 @@ class CityWeatherViewModelTest {
     var rule: TestRule = InstantTaskExecutorRule()
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
-//    private val dispatcher = StandardTestDispatcher(TestCoroutineScheduler())
+    private val dispatcher = StandardTestDispatcher(TestCoroutineScheduler())
 
     @Mock
     private lateinit var searchByCityUseCase: SearchByCityUseCase

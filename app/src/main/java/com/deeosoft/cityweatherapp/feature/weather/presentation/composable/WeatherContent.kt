@@ -21,7 +21,29 @@ fun SearchContentScreen(modifier: Modifier = Modifier, context: Context, viewMod
         is UIState.Loading -> {}
         is UIState.Error -> {
             val error = (weatherState.value as UIState.Error).message
+            val data = (weatherState.value as UIState.Error).data
             Toast.makeText(context, error, Toast.LENGTH_LONG).show()
+            if(data?.isNotEmpty() == true){
+                LazyColumn{
+                    items(data.size) {
+                        data[0]?.let { it1 ->
+                            WeatherItem(
+                                weather = it1,
+                                onTap = {weather ->
+                                    val intent = Intent(context, WeatherForecastDetail::class.java)
+                                    intent.putExtra("Weather", weather)
+                                    context.startActivity(intent)
+                                },
+                                onFavoriteTap = { state ->
+                                    data[it]?.id?.let { it2 -> viewModel.saveFavoriteState(it2, state) }
+                                }
+                            )
+                        }
+                    }
+                }
+            }else{
+                EmptyWeatherData(modifier = modifier)
+            }
         }
         is UIState.Success -> {
             val data = (weatherState.value as UIState.Success<List<Weather?>>).data
